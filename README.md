@@ -2,7 +2,7 @@
 
 Encryption, secrets management, JWT token management, and HashiCorp Vault integration for the [LegionIO](https://github.com/LegionIO/LegionIO) framework. Provides AES-256-CBC message encryption, RSA key pair generation, cluster secret management, JWT issue/verify operations, Vault token lifecycle management, and multi-cluster Vault connectivity.
 
-**Version**: 1.5.6
+**Version**: see [`version.rb`](lib/legion/crypt/version.rb)
 
 ## Installation
 
@@ -57,7 +57,11 @@ claims = Legion::Crypt.verify_external_token(
 )
 
 # Or use the JWT module directly
-claims = Legion::Crypt::JWT.verify_with_jwks(token, jwks_url: jwks_url)
+claims = Legion::Crypt::JWT.verify_with_jwks(
+  token, jwks_url: jwks_url,
+  issuers: ['https://login.microsoftonline.com/TENANT/v2.0'],
+  audience: 'app-client-id'
+)
 ```
 
 Public keys are cached for 1 hour and automatically re-fetched on cache miss (handles key rotation).
@@ -229,3 +233,7 @@ The SPNEGO token is sent as an HTTP `Authorization` header (not JSON body). The 
 ## License
 
 Apache-2.0
+
+## Developing this fork
+
+See [the fork development guide](docs/DEVELOPMENT.md) for the source/spec map, an offline RSpec planning helper, safe validation boundaries and proposed self-hosted CI improvements. Agent entry points are [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md). Helpers do not start Legion or access live services.
