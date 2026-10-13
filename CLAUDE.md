@@ -1,14 +1,15 @@
 # legion-crypt: Encryption and Vault Integration for LegionIO
 
-**Repository Level 3 Documentation**
-- **Parent**: `/Users/miverso2/rubymine/legion/CLAUDE.md`
+**Repository architecture reference**
+
+For standalone fork development, read [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md); no parent-workspace path is required.
 
 ## Purpose
 
 Handles encryption, decryption, secrets management, JWT token management, and HashiCorp Vault connectivity for the LegionIO framework. Provides AES-256-CBC message encryption, RSA key pair generation, cluster secret management, JWT issue/verify operations, and Vault token lifecycle management.
 
 **GitHub**: https://github.com/LegionIO/legion-crypt
-**Version**: 1.5.7
+**Version**: see `lib/legion/crypt/version.rb`
 **License**: Apache-2.0
 
 ## Architecture
@@ -200,7 +201,11 @@ claims = Legion::Crypt.verify_external_token(
 )
 
 # Direct module usage
-claims = Legion::Crypt::JWT.verify_with_jwks(token, jwks_url: jwks_url)
+claims = Legion::Crypt::JWT.verify_with_jwks(
+  token, jwks_url: jwks_url,
+  issuers: ['https://login.microsoftonline.com/TENANT/v2.0'],
+  audience: 'app-client-id'
+)
 ```
 
 **Flow:** decode JWT header (unverified) to extract `kid` -> `JwksClient.find_key` fetches the matching public key from cache or JWKS endpoint -> verify JWT signature with the public key.
